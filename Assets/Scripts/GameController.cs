@@ -11,6 +11,13 @@ public class GameController : MonoBehaviour
 
     private float slowMoEffect = .1f;
 
+    [Header("Fields for progress bar")]
+    [SerializeField] private Transform startTransform;
+    [SerializeField] private Transform finishTransform;
+    [SerializeField] private PlayerController player;
+    public float StartDistance { get; private set; }
+    public float DistanceLeft { get; private set; }
+    
     private void Awake()
     {
         if (singleton == null)
@@ -24,7 +31,31 @@ public class GameController : MonoBehaviour
 
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.02f;
-    }    
+    }
+
+    private void Start()
+    {
+        // working with progress bar
+        if (player!= null)
+            StartDistance = finishTransform.position.z - startTransform.position.z;
+    }
+
+    private void Update()
+    {
+        // working with progress bar
+        if (player != null)
+        {
+            DistanceLeft = Vector3.Distance(player.transform.position, finishTransform.position);
+            if (DistanceLeft > StartDistance)
+            {
+                DistanceLeft = StartDistance;
+            }
+            if (player.transform.position.z > finishTransform.position.z)
+            {
+                DistanceLeft = 0;
+            }
+        }
+    }
 
     public void StartGame()
     {
@@ -35,9 +66,12 @@ public class GameController : MonoBehaviour
     public void EndGame()
     {
         GameEnded = true;
-        Debug.Log("Game ended");
     }
 
+    /// <summary>
+    /// overloading EndGame method
+    /// </summary>
+    /// <param name="win">true - u win; false - u lose.</param>
     public void EndGame(bool win)
     {
         GameEnded = true;
@@ -45,7 +79,6 @@ public class GameController : MonoBehaviour
         Time.fixedDeltaTime *= slowMoEffect;
         if (!win)
         {
-            Debug.Log("U have lost. Restart...");
             Invoke("Restart", 2 * slowMoEffect);
         }
         else
@@ -54,6 +87,8 @@ public class GameController : MonoBehaviour
         }
     }
 
+
+    // There are Method for working with Scenes...
     public void Restart()
     {
         Scene scene = SceneManager.GetActiveScene();
@@ -62,7 +97,6 @@ public class GameController : MonoBehaviour
 
     public void LoadNextLvl()
     {
-        Debug.Log(SceneManager.sceneCountInBuildSettings);
         Scene scene = SceneManager.GetActiveScene();
 
         if (scene.buildIndex + 1 < SceneManager.sceneCountInBuildSettings)
@@ -71,12 +105,8 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Scene {scene.buildIndex + 1} doesn't exist");
             LoadMainMenu();
         }
-
-        
-
     }
 
     public void LoadMainMenu()
