@@ -14,19 +14,15 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private ParticleSystem[] dusts;
 
-
     // Для теста:
     private bool android;
-    
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         
-
         android = (Application.platform == RuntimePlatform.Android) ? true: false;
-            
     }
 
     private void Update()
@@ -44,7 +40,8 @@ public class PlayerController : MonoBehaviour
                 {
                     GameController.singleton.StartGame();
                     anim.SetBool("Run", true);
-                    foreach (var item in dusts)
+                    
+                    foreach (ParticleSystem item in dusts)
                         item.Play();
                 }
 
@@ -67,7 +64,7 @@ public class PlayerController : MonoBehaviour
                 lastTouchPosition = Vector2.zero;
             }
         }
-        //Удалить позже
+        // Для теста управления в редакторе Unity
         else
         {
             Vector2 deltaPos = Vector2.zero;
@@ -78,7 +75,8 @@ public class PlayerController : MonoBehaviour
                 {
                     GameController.singleton.StartGame();
                     anim.SetBool("Run", true);
-                    foreach (var item in dusts)
+
+                    foreach (ParticleSystem item in dusts)
                         item.Play();
                 }
 
