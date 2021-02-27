@@ -50,7 +50,7 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            // TODO: Next level menu
+            Invoke("LoadNextLvl", 2 * slowMoEffect);
         }
     }
 
@@ -62,7 +62,25 @@ public class GameController : MonoBehaviour
 
     public void LoadNextLvl()
     {
+        Debug.Log(SceneManager.sceneCountInBuildSettings);
         Scene scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(scene.buildIndex + 1);
+
+        if (scene.buildIndex + 1 < SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene(scene.buildIndex + 1);
+        }
+        else
+        {
+            Debug.Log($"Scene {scene.buildIndex + 1} doesn't exist");
+            LoadMainMenu();
+        }
+
+        
+
+    }
+
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
